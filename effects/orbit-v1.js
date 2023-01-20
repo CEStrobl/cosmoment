@@ -1,11 +1,15 @@
 // still
-// white shades
+// grows and shrinks and disappears
+// click to spawn
+// no trail
 
 let particles = []
 let width = window.innerWidth;
 let height = window.innerHeight;
 let midpointX = width/2;
 let midpointY = height/2;
+
+console.log(midpointX)
 
 
 let particleSize = 10
@@ -21,35 +25,16 @@ let maxSpd = 20
 
 let enableSpawning = true
 
-let curx = 0
-let cury = 0
-let speed = 30
-
 function setup(){
 	createCanvas(width, height);
-	background(0)
-	
-}
 
-function createVectorDirection(mx, my, cx, cy){
-    return createVector((mx-cx),(my-cy));
-}
-function moveCurrent(cx, cy, mx, my, v, s){
-    curx +=  (v.x * 1/s);
-	cury +=  (v.y * 1/s);
+	let p = new Main()
+	particles.push(p)
+
 }
 
 function draw(){
-	background("black")
-
-	
-	mposx = mouseX;//library function to find the co-ords of the mouse
-	mposy = mouseY;
-	vec = createVectorDirection(mposx, mposy, curx, cury);//find the vector between the cursor and current text position
-	moveCurrent(curx, cury, mposx, mposy, vec, speed); // move the text in the direction of the cursor and apply a speed variable
-	//curx&cury are updated by moveCurrent then drawn to the canvas
-	let p = new Main(curx,cury)
-	p.show(mposx, mposy, curx, cury)
+	background(0)
 	
 	if(mouseIsPressed === true){
 		if (enableSpawning === true) {
@@ -60,33 +45,48 @@ function draw(){
 	} else{
 		enableSpawning = true
 	}
+	// for (let i = 0; i < particleCount; i++) {
+
+	// }
 	
-	
+
 	for (let i = 0; i < particles.length; i++) {
 		const e = particles[i];
 		e.update()
 		e.show()
 		
 	}
-	
+
+	// fill(255, 0,0, 100)
+	// rect(midpointX + mainSize/2, 0, 5, height)
+	// rect(0, midpointY + mainSize/2, width, 5)
+	// fill(0, 255,0, 100)
+	// rect(midpointX - mainSize/2, 0, 5, height)
+	// rect(0, midpointY - mainSize/2, width, 5)
 }
 
 class Main {
-	constructor(curx,cury){
-		// this.x = mouseX;
-		// this.y = mouseY;
+	constructor(){
+		this.x = midpointX;
+		this.y = midpointY;
+		// this.vx = random(minReach, maxReach);
+		// this.vy = random(-maxSpd, -minSpd)
 		
 		this.alpha = 25;
 	}
 
 
 	update(){
+		// this.x += this.vx
+		// this.y += this.vy
+		// this.alpha -=5
 	}
 
-	show(mx, my, cx, cy){
+	show(){
+		// stroke(255)
 		noStroke()
-		fill(this.alpha)
-		ellipse((mx-cx),(my-cy), mainSize)
+		fill(255, this.alpha)
+		ellipse(this.x, this.y, mainSize)
 	}
 }
 
@@ -106,20 +106,15 @@ class SatelliteA {
 		this.hide = false
 		
 		this.alpha = 255;
-		this.easing = 0.5;
-		this.targetX = mouseX *this.easing
-		this.targetY = mouseY *this.easing
+		this.easing = 0.05;
 	}
 
 
 	update(){
 		angleMode(DEGREES)
 
-		this.targetX = mouseX *this.easing
-		this.targetY = mouseY *this.easing
-
-		this.x = this.targetX + this.radius * cos(this.angle)
-		this.y = this.targetY + this.radius * cos(this.angle)
+		this.x = midpointX + this.radius * cos(this.angle)
+		this.y = midpointY + this.radius * cos(this.angle)
 
 		this.angle++
 
@@ -133,10 +128,10 @@ class SatelliteA {
 
 		// hide when behind the main
 		if (this.hide === true
-		&&	this.x-particleSize/2 < mouseX + mainSize/2 -15
-		&& this.x > mouseX - mainSize/2 +15
-		&&  this.y-particleSize/2 < mouseY + mainSize/2 -15
-		&& this.y > mouseY - mainSize/2 +15)
+		&&	this.x-particleSize/2 < midpointX + mainSize/2 -15
+		&& this.x > midpointX - mainSize/2 +15
+		&&  this.y-particleSize/2 < midpointY + mainSize/2 -15
+		&& this.y > midpointY - mainSize/2 +15)
 		{
 			this.a += -80
 		} else {
