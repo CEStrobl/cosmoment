@@ -24,19 +24,13 @@ let maxSpd = 20
 
 let enableSpawning = true
 
-let curx = 0;
-let cury = 0;
-let speed = 30;
+let curx = 0
+let cury = 0
+let speed = 30
 
 //library function to find the co-ords of the mouse
 let mposx = 0;
 let mposy = 0;
-
-let satX = 0;
-let satY = 0;
-
-let satCX = 0;
-let satCY = 0;
 
 function setup(){
 	createCanvas(width, height);
@@ -48,14 +42,11 @@ function setup(){
 	let Earth = new Planet	(7.65, 180, 1.56, 34, 61, 181)
 	let Mars = new Planet	(5.94, 220, 1.26, 201, 52, 22)
 	let Jupiter = new Planet(30.0, 320, 0.68, 207, 146, 81)
-
-	let Saturn = new Planet	(23.32, 400, 0.51, 173, 103, 59, "saturn")
-	let saturnRings = new SatelliteA(40, "saturn")
-
+	let Saturn = new Planet	(23.32, 400, 0.51, 173, 103, 59)
 	let Uranus = new Planet	(14.51, 480, 0.36, 32, 145, 153)
 	let Neptune = new Planet(14.09, 520, 0.28, 23, 114, 179)
 	let Pluto = new Planet	(4.68, 560, 0.25, 140, 101, 70)
-	particles.push(Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, saturnRings)
+	particles.push(Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto)
 }
 
 function createVectorDirection(mx, my, cx, cy){
@@ -70,7 +61,7 @@ function draw(){
 	background("black")
 
 	
-	// console.log(satX, satY, satCX, satCY)
+
 	
 	mposx = mouseX;
 	mposy = mouseY;
@@ -126,22 +117,17 @@ class Main {
 }
 
 class SatelliteA {
-	constructor(orbit, planet){
+	constructor(cx, cy){
 		this.angle = 0
-		this.radius = orbit
+		this.radius = 100
 		this.r = 255
 		this.g = 255
 		this.b = 255
 		this.a = 255
 		this.mySize = particleSize/5
 
-		this.planet = planet;
-
-		
-		this.x = mouseX;
-		this.y = mouseY-this.radius;
-		
-
+		this.x = midpointX;
+		this.y = midpointY-this.radius;
 		
 		this.hide = false;
 		
@@ -152,25 +138,13 @@ class SatelliteA {
 	}
 	
 	
-	update(){
-
-		if (this.planet === "saturn") {
-
-			this.x = satX;
-			this.y = satY-this.radius;
-			
-			this.cx = satCX
-			this.cy = satCY
-			
-		} else {
-			this.cx = cx*2
-			this.cy = cy*2
-	
-			this.cx += (mouseX * 1/200);
-			this.cy += (mouseY * 1/(this.mySize * 20));
-		}
-
+	update(cx, cy){
 		angleMode(DEGREES)
+		this.cx = cx*2
+		this.cy = cy*2
+
+		this.cx += (mouseY * 1/200);
+		this.cy += (mouseY * 1/(this.mySize * 20));
 
 		this.targetX = this.cx *this.easing
 		this.targetY = this.cy *this.easing
@@ -190,10 +164,10 @@ class SatelliteA {
 
 		// hide when behind the main
 		if (this.hide === true
-		&&	this.x-particleSize/2 < this.cx + mainSize/2 -15
-		&& this.x > this.cx - mainSize/2 +15
-		&&  this.y-particleSize/2 < this.cy + mainSize/2 -15
-		&& this.y > this.cy - mainSize/2 +15)
+		&&	this.x-particleSize/2 < cx + mainSize/2 -15
+		&& this.x > cx - mainSize/2 +15
+		&&  this.y-particleSize/2 < cy + mainSize/2 -15
+		&& this.y > cy - mainSize/2 +15)
 		{
 			this.a += -80
 		} else {
@@ -227,6 +201,14 @@ class SatelliteA {
 	}
 
 	show(){
+		// beginShape();
+		// for (let i = 0; i < this.history.length; i++) {
+		// 	stroke(this.r,this.g,this.b-50,20)
+		//   let pos = this.history[i];
+		//   noFill();
+		//   vertex(pos.x, pos.y);
+		//   endShape();
+		// }
 		noStroke()
 		fill(this.r,this.g,this.b,this.a)
 		ellipse(this.x, this.y, this.mySize)
@@ -234,7 +216,7 @@ class SatelliteA {
 }
 
 class Planet {
-	constructor(radius, orbit, spd, r, g, b, planet){
+	constructor(radius, orbit, spd, r, g, b,){
 		this.angle = 0
 		this.radius = orbit
 		this.r = r
@@ -254,8 +236,6 @@ class Planet {
 		this.easing = 0.5;
 
 		this.history = [];
-
-		this.planet = planet
 	}
 	
 	
@@ -263,35 +243,37 @@ class Planet {
 		angleMode(DEGREES)
 		this.cx = cx*2
 		this.cy = cy*2
-		
+
 		this.cx += (mouseY * 1/200);
 		this.cy += (mouseY * 1/(this.mySize * 20));
-		
+
 		this.targetX = this.cx *this.easing
 		this.targetY = this.cy *this.easing
-		
+
 		this.x = this.targetX + this.radius * cos(this.angle)
 		this.y = this.targetY + this.radius * sin(this.angle) 
-		
+
 		this.angle+= this.spd
-		
+
 		// trail
 		let v = createVector(this.x, this.y);
-		
+
 		this.history.push(v);
-		
+	
 		if (this.history.length > 10) {
-			this.history.splice(0, 1);
-		}
-		if(this.planet === "saturn") {
-			satX = this.x
-			satY = this.y
-			satCX = this.cx
-			satCY = this.cy
+		  this.history.splice(0, 1);
 		}
 	}
 
 	show(){
+		// beginShape();
+		// for (let i = 0; i < this.history.length; i++) {
+		// 	stroke(this.r,this.g,this.b-50,20)
+		//   let pos = this.history[i];
+		//   noFill();
+		//   vertex(pos.x, pos.y);
+		//   endShape();
+		// }
 		noStroke()
 		fill(this.r,this.g,this.b,this.a)
 		ellipse(this.x, this.y, this.mySize*2)

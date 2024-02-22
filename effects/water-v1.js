@@ -2,8 +2,8 @@
 // very laggy when theres a lot
 
 let ocean = []
-let width = window.innerWidth -200;
-let height = window.innerHeight -200;
+let width = window.innerWidth;
+let height = window.innerHeight -20;
 let midpointX = width/2;
 let midpointY = height/2;
 
@@ -105,6 +105,7 @@ class Water {
 			// this.x = width-200 - particleSize/2
 			this.vx *= - bounciness
 			this.vx = -this.vx
+			
 
 			// this.blue = 100
 		}

@@ -4,7 +4,7 @@
 let smokes = []
 let flames = []
 let width = window.innerWidth;
-let height = window.innerHeight;
+let height = window.innerHeight - 40;
 let midpointX = width/2;
 let midpointY = height/2;
 

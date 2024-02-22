@@ -4,8 +4,8 @@
 // extra bouncy
 
 let ocean = []
-let width = window.innerWidth -200;
-let height = window.innerHeight -200;
+let width = window.innerWidth;
+let height = window.innerHeight -40;
 let midpointX = width/2;
 let midpointY = height/2;
 
